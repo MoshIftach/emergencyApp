@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>Add custom markers in Mapbox GL JS</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+	<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css" type="text/css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+	  .marker {
+        background-image: url('https://img.favpng.com/23/4/5/israel-police-png-favpng-EUybvaqHLr3KqmUDvJx2VWXUf.jpg');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v11',
+  center: [35.19841, 32.00938],
+  zoom: 9
+});
+
+const nav = new mapboxgl.NavigationControl();
+map.addControl(nav);
+
+var directions = new MapboxDirections({
+  accessToken: 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA',
+});
+
+map.addControl(directions, 'top-left');
+
+const geojson = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.94939, 29.56271]
+      },
+      properties: {
+        title: 'ימת"א אילת',
+        description: 'כתובת: כיכר המייסדים (שדרות חטיבת הנגב פינת שדרות חטיבת גולני), אילת <br> טלפון: 08-6362444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.99510, 29.71871]
+      },
+      properties: {
+        title: 'נקודת נמל תעופה רמון',
+        description: 'כתובת: בתוך שטח נמל תעופה רמון <br> - :טלפון <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79902, 30.61244]
+      },
+      properties: {
+        title: 'נקודת מצפה רמון',
+        description: 'כתובת: מצפה רמון, רחוב נחל האלה פינת רחוב מעלה בן תור (בסמוך למד"א ומכבי האש) <br> טלפון: 08-6588444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.77256, 31.00571]
+      },
+      properties: {
+        title: 'נקודת ביר האדג',
+        description: 'כתובת: ביר האדג בסמוך למבנה המועצה האזורית רמת נגב <br> טלפון: 08-6382500 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.93053, 30.98704]
+      },
+      properties: {
+        title: 'נקודת ירוחם',
+        description: 'כתובת: צבי בורנשטיין 195, ירוחם <br> טלפון: 08-658-5417 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.03287, 31.07313]
+      },
+      properties: {
+        title: 'תחנת דימונה',
+        description: 'כתובת: שדרות הרצל 51, דימונה <br> טלפון: 08-6543444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.01326, 31.16617]
+      },
+      properties: {
+        title: 'תחנת ערוער',
+        description: 'כתובת: ערערה בנגב, שכונה 5 <br> טלפון: 08-951-7444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.83495, 31.20022]
+      },
+      properties: {
+        title: 'נקודת שגב שלום',
+        description: 'כתובת: שגב שלום, סמוך למבנה המועצה המקומית <br> טלפון: 08-6226647 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.35548, 31.19708]
+      },
+      properties: {
+        title: 'נקודת נוה זוהר',
+        description: 'כתובת: נווה זוהר מבנה הסולריום, מתחם המלונות עין בוקק - ים המלח <br> טלפון: 08-9970922 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.20974, 31.26041]
+      },
+      properties: {
+        title: 'תחנת ערד',
+        description: 'כתובת: יהודה 45, ערד <br> טלפון: 08-955-1222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.84727, 31.24798]
+      },
+      properties: {
+        title: 'נקודת תל שבע',
+        description: 'כתובת: סמוך למבנה המועצה המקומית, תל שבע <br> טלפון: 08-6249901 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.78198, 31.24957]
+      },
+      properties: {
+        title: 'מרחב נגב',
+        description: 'כתובת: שדרות דוד טוביהו 95, באר שבע <br> טלפון: 08-6464444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.78828, 31.23826]
+      },
+      properties: {
+        title: 'תחנת באר שבע',
+        description: 'כתובת: רחוב הרצל פינת רחוב קק"ל, באר שבע <br> טלפון: 08-6462744 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.89567, 31.30836]
+      },
+      properties: {
+        title: 'תחנת העיירות',
+        description: 'כתובת: כביש 60, מערבית לצומת שוקת <br> טלפון: 08-6292444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.61488, 31.32170]
+      },
+      properties: {
+        title: 'תחנת אופקים',
+        description: 'כתובת: קבוץ גלויות 8, אופקים - הכניסה מרחוב הרצל 2 <br> טלפון: 08-9928222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.58648, 31.41463]
+      },
+      properties: {
+        title: 'תחנת נתיבות',
+        description: 'כתובת: מלכי ישראל 71 (903), נתיבות <br> טלפון: 08-9937444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.75067, 31.40934]
+      },
+      properties: {
+        title: 'תחנת רהט',
+        description: 'כתובת: רחוב עומר אל מוכתאר, בסמוך ליציאה הצפונית (בין כיכר אבן חלדון לכיכר סובאלה), רהט <br> טלפון: 08-9913888 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.10250, 31.53420]
+      },
+      properties: {
+        title: 'תחנת חברון',
+        description: 'כתובת: שכונת גבעת האבות(כניסה מציר מערבית לשכונה-צמוד לכניסה לשכונה), קרית ארבע <br> טלפון: 02-9959555 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.58715, 31.52439]
+      },
+      properties: {
+        title: 'תחנת שדרות',
+        description: 'כתובת: הרצל 61, שדרות <br> טלפון: 08-6620444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.76921, 31.61104]
+      },
+      properties: {
+        title: 'תחנת קריית גת',
+        description: 'כתובת: לכיש 2, קריית גת <br> טלפון: 08-6872222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.55549, 31.67098]
+      },
+      properties: {
+        title: 'תחנת אשקלון',
+        description: 'כתובת: רחוב הנשיא פינת רחוב אלי כהן, אשקלון <br> טלפון: 08-6771440 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.74214, 31.72668]
+      },
+      properties: {
+        title: 'תחנת קרית-מלאכי',
+        description: 'כתובת: רחוב משה שרת (בסמוך להיכל התרבות), קריית מלאכי <br> טלפון: 08-8608444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.99442, 31.76157]
+      },
+      properties: {
+        title: 'תחנת בית שמש',
+        description: 'כתובת: בסמוך לצומת הכניסה לנחם (מפגש הכבישים 38 ו-3856), בית שמש <br> טלפון: 02-9902222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.12044, 31.70780]
+      },
+      properties: {
+        title: 'תחנת עציון',
+        description: 'כתובת: רחוב הרמ"ק(מתחם הביטחון), ביתר עילית <br> טלפון: 02-6544444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.21256, 31.75138]
+      },
+      properties: {
+        title: 'תחנת מוריה',
+        description: 'כתובת: הסדנא 14, ירושלים <br> טלפון: 02-5683200 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.24188, 31.75316]
+      },
+      properties: {
+        title: 'תחנת עוז',
+        description: 'כתובת: רחוב על"ר פינת רחוב מוחמד חמדאן רבאיעה, ירושלים <br> טלפון: 02-5685444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.29146, 31.77163]
+      },
+      properties: {
+        title: 'תחנת מעלה אדומים',
+        description: 'כתובת: פרי מגדים 3(דרך הר הבית פינת רחוב פרי מגדים), מעלה אדומים <br> טלפון: 02-5358444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.22053, 31.78190]
+      },
+      properties: {
+        title: 'תחנת לב הבירה',
+        description: 'כתובת: כיכר מוסקבה (שניאור חשין 1), מגרש הרוסים, ירושלים <br> טלפון: 02-5391777 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.23338, 31.78477]
+      },
+      properties: {
+        title: 'תחנת שלם',
+        description: 'כתובת: רחוב סאלח אל-דין פינת רחוב אבן סינא, ירושלים <br> טלפון: 02-6207459 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.14635, 31.80301]
+      },
+      properties: {
+        title: 'תחנת הראל',
+        description: 'כתובת: המעפילים 19, מבשרת ציון<br> טלפון: 02-5339200 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.23857, 31.84359]
+      },
+      properties: {
+        title: 'תחנת שפט',
+        description: 'כתובת: גולדברג לאה 1, ירושלים <br> טלפון: 02-5848222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.26234, 31.86505]
+      },
+      properties: {
+        title: 'תחנת בנימין',
+        description: 'כתובת: אזור התעשייה שער בנימין <br> טלפון: 02-9706444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.64706, 31.78033]
+      },
+      properties: {
+        title: 'תחנת אשדוד',
+        description: 'כתובת: הנביאים 40, אשדוד <br> טלפון: 08-6387222 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.70779, 31.78356]
+      },
+      properties: {
+        title: 'נקודת גן יבנה',
+        description: 'כתובת: רחוב השופטים בסמוך לפינת רחוב אביר יעקב, גן יבנה <br> טלפון: 08-6219270 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.99398, 31.76123]
+      },
+      properties: {
+        title: 'תחנת מטה יהודה',
+        description: 'כתובת: בסמוך לצומת הכניסה לנחם (מפגש הכבישים 38 ו-3856), בית שמש <br> טלפון: 02-9902210 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.77392, 31.81866]
+      },
+      properties: {
+        title: 'תחנת גדרה',
+        description: 'כתובת: פינס 4, גדרה <br> טלפון: 08-8596085 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.74848, 31.87763]
+      },
+      properties: {
+        title: 'תחנת יבנה',
+        description: 'כתובת: הגלבוע 42, יבנה <br> טלפון: 08-9325444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.80850, 31.90348]
+      },
+      properties: {
+        title: 'תחנת רחובות',
+        description: 'כתובת: הרצל 206, רחובות <br> טלפון: 08-9371588 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79647, 31.93386]
+      },
+      properties: {
+        title: 'נקודת נס ציונה',
+        description: 'כתובת: האירוסים 53, נס ציונה <br> טלפון: 08-9404384 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.86714, 31.92989]
+      },
+      properties: {
+        title: 'תחנת רמלה',
+        description: 'כתובת: הרצל 80 (סמוך לעירייה), רמלה <br> טלפון: 08-9279535 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.03288, 31.94454]
+      },
+      properties: {
+        title: 'תחנת מודיעין עילית',
+        description: 'כתובת: מעבר נילי - על כביש 446 כ-400 מטר צפונית מכיכר הכניסה למודיעין עילית <br> טלפון: 08-6447200 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.00427, 31.90871]
+      },
+      properties: {
+        title: 'תחנת מודיעין',
+        description: 'כתובת: דם המכבים 26, מודיעין <br> טלפון: 08-6769444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79579, 31.93088]
+      },
+      properties: {
+        title: 'נקודת נס ציונה',
+        description: 'כתובת: האירוסים 53, נס ציונה <br> טלפון: 08-9404384 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.87559, 31.95306]
+      },
+      properties: {
+        title: 'נקודת נווה שלום',
+        description: 'כתובת: רחוב יצחק רבין פינת רחוב סלאח א דין / חוסיין בן טלאל, לוד <br> טלפון: 08-9284612 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79601, 31.97657]
+      },
+      properties: {
+        title: 'תחנת ראשון לציון',
+        description: 'כתובת: זבוטינסקי 106, ראשון לציון <br> טלפון: 03-9609444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.83227, 32.00532]
+      },
+      properties: {
+        title: 'נקודת בית דגן',
+        description: 'כתובת: בגין מנחם 25, בית דגן <br> טלפון: 03-9604259 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.94288, 32.00679]
+      },
+      properties: {
+        title: 'נקודת שוהם',
+        description: 'כתובת: החבל 2, שוהם <br> טלפון: 03-9791942 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.75734, 32.01343]
+      },
+      properties: {
+        title: 'נקודת בת ים',
+        description: 'כתובת: רחוב דוד רזיאל פינת רחוב ירקוני, בת ים <br> טלפון: 03-5555222 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.84545, 32.03696]
+      },
+      properties: {
+        title: 'תחנת מסובים',
+        description: 'כתובת: דרך לוד (סמוך לצומת תל השומר), אור יהודה <br> טלפון: 03-5384444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79989, 32.04577]
+      },
+      properties: {
+        title: 'תחנת השכונות',
+        description: 'כתובת: בר-לב חיים 100, תל אביב-יפו <br> טלפון: 03-6304444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.76062, 32.05638]
+      },
+      properties: {
+        title: 'תחנת יפו',
+        description: 'כתובת: דרך שלמה (סלמה) 18, תל אביב-יפו <br> טלפון: 03-6802222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.78581, 32.06482]
+      },
+      properties: {
+        title: 'תחנת שרת',
+        description: 'כתובת: המסגר 12, תל אביב-יפו <br> טלפון: 03-5678444 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.76757, 32.06893]
+      },
+      properties: {
+        title: 'נקודת שוק הכרמל',
+        description: 'כתובת: קלישר 24, תל אביב <br> טלפון: 03-5166530 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.80961, 32.06907]
+      },
+      properties: {
+        title: 'תחנת גבעתיים',
+        description: 'כתובת: ויצמן 76, גבעתיים <br> טלפון: 03-5724444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.95957, 32.05036]
+      },
+      properties: {
+        title: 'נקודת אלעד',
+        description: 'כתובת: רבי חייא 5, אלעד <br> טלפון: 03-9095974 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.40039, 32.06899]
+      },
+      properties: {
+        title: 'נקודת מעלה אפרים',
+        description: 'כתובת: רחוב בני אפרים (בסמוך למבנה המועצה המקומית), מעלה אפרים <br> טלפון: 02-9407555 <br> שעות פתיחה: 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.20985, 32.10434]
+      },
+      properties: {
+        title: 'תחנת אריאל',
+        description: 'כתובת: רחוב 33 מספר 20, אריאל <br> טלפון: 03-7729444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79158, 32.08040]
+      },
+      properties: {
+        title: 'תחנת לב תל אביב',
+        description: 'כתובת: רחוב 1285 מספר בית 13, תל אביב יפו<br> טלפון: 03-7416444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.79926, 32.08818]
+      },
+      properties: {
+        title: 'נקודת הבורסה רמת גן',
+        description: 'כתובת: הרקון 17, בתוך מבנה נקודת הבורסה, רמת גן <br> טלפון: 03-5412019 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.83004, 32.09842]
+      },
+      properties: {
+        title: 'תחנת בני ברק',
+        description: 'כתובת: רחוב הקישון 10, בני ברק <br> טלפון: 03-6796452 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.88332, 32.09200]
+      },
+      properties: {
+        title: 'תחנת פתח תקווה',
+        description: 'כתובת: שטמפפר יהושע 53, פתח תקווה <br> טלפון: 03-9393444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.94636, 32.09931]
+      },
+      properties: {
+        title: 'תחנת ראש העין',
+        description: 'כתובת: צה"ל 20, ראש העין <br> טלפון: 03-9004444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.97435, 32.11606]
+      },
+      properties: {
+        title: 'תחנת כפר קאסם',
+        description: 'כתובת: צמוד לעירייה, כניסה מחנייה משותפת לעירייה ולמשרד הפנים(רחוב חסן תאבת), כפר קאסם <br> טלפון: 03-9740600 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.84110, 32.13902]
+      },
+      properties: {
+        title: 'נקודת רמת השרון',
+        description: 'כתובת: רחוב טרומפלדור פינת רחוב הנצח, רמת השרון <br> טלפון: 03-5488444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.89571, 32.15884]
+      },
+      properties: {
+        title: 'נקודת הוד השרון',
+        description: 'כתובת: דרך מגדיאל 35, הוד השרון <br> טלפון: 09-7405077 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.81294, 32.16577]
+      },
+      properties: {
+        title: 'תחנת גלילות',
+        description: 'כתובת: רחוב שפיים, הרצליה <br> טלפון: 09-9704444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.85497, 32.17782]
+      },
+      properties: {
+        title: 'נקודת רעננה',
+        description: 'כתובת: הפרחים 16, רעננה <br> טלפון: 09-7793606 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.89143, 32.17971]
+      },
+      properties: {
+        title: 'תחנת כפר סבא',
+        description: 'כתובת: טשרניחובסקי 2, כפר סבא <br> טלפון: 09-7473555 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.15373, 32.20932]
+      },
+      properties: {
+        title: 'נקודת קדום',
+        description: 'כתובת: בסיס חטמ"ר אפרים, סמוך לקדומים <br> טלפון: 09-7754404 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.95441, 32.23294]
+      },
+      properties: {
+        title: 'תחנת טירה',
+        description: 'כתובת: רחוב אל קודס פינת באב אל חאן, טירה <br> טלפון: 09-790-8613 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.99296, 32.25209]
+      },
+      properties: {
+        title: 'תחנת טייבה',
+        description: 'כתובת: כביש 444 (שכונת הבדואים), טייבה <br> טלפון: 09-7612444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.90512, 32.28413]
+      },
+      properties: {
+        title: 'תחנת שדות',
+        description: 'כתובת: הרצל 36, קדימה-צורן <br> טלפון: 09-9617201 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.85593, 32.29593]
+      },
+      properties: {
+        title: 'תחנת נתניה',
+        description: 'כתובת: וינר נחמה 6, נתניה <br> טלפון: 09-8864444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.04039, 32.42216]
+      },
+      properties: {
+        title: 'תחנת באקה אל ערביה',
+        description: 'כתובת: רחוב אלעאזלי פינת ביר בורין, באקה אל ערביה <br> טלפון: 04-6159400 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.90743, 32.43922]
+      },
+      properties: {
+        title: 'תחנת חדרה',
+        description: 'כתובת: כביש 4 בסמוך לכיכר המאה, חדרה <br> טלפון: 04-6327444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.03751, 32.46093]
+      },
+      properties: {
+        title: 'נקודת חריש',
+        description: 'כתובת: רחוב אורן 6, חריש <br> - :טלפון <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.97344, 32.47813]
+      },
+      properties: {
+        title: 'נקודת פרדס חנה',
+        description: 'כתובת: רחוב דרך הנדיב פינת רחוב הנוטר (סמוך למבנה המועצה המקומית), פרדס חנה-כרכור <br> טלפון: 04-8648761 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.49001, 32.50307]
+      },
+      properties: {
+        title: 'תחנת בית-שאן',
+        description: 'כתובת: סמוך לצומת הרחובות שאול המלך ויצחק שמש, בית שאן <br> טלפון: 04-6067444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.91283, 32.50663]
+      },
+      properties: {
+        title: 'נקודת אור עקיבא',
+        description: 'כתובת: רחוב רוטשילד סמוך לפינת מנחם ציוני, אור עקיבא <br> טלפון: 04-6360783 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.09655, 32.50871]
+      },
+      properties: {
+        title: 'תחנת עירון',
+        description: 'כתובת: כביש 65 (ואדי עארה) בין צומת הכניסה לערערה לצומת מי עמי <br> טלפון: 04-6158444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.14650, 32.53618]
+      },
+      properties: {
+        title: 'תחנת אום אל פאחם',
+        description: 'כתובת: שכונת קחאויש, אום אל פאחם: כניסה מצומת אום אל פאחם ולאחריה צפונית לכיכר הראשונה <br> טלפון: 04-6115000 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.90218, 32.53702]
+      },
+      properties: {
+        title: 'תחנת גסר א-זרקא',
+        description: 'כתובת: מבנה המועצה המקומית גסר א-זרקא <br> טלפון: 04-8660549 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.93797, 32.57647]
+      },
+      properties: {
+        title: 'תחנת זיכרון-יעקב',
+        description: 'כתובת: כביש 4 (צפונית לצומת זכרון יעקב), זכרון יעקב <br> טלפון: 04-6299444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.28962, 32.61149]
+      },
+      properties: {
+        title: 'תחנת עפולה',
+        description: 'כתובת: הנשיא וייצמן 7, עפולה <br> טלפון: 04-6524444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.10564, 32.66158]
+      },
+      properties: {
+        title: 'נקודת יקנעם',
+        description: 'כתובת: האורן 3, יקנעם עילית <br> טלפון: 04-9090400 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.24173, 32.67950]
+      },
+      properties: {
+        title: 'תחנת מגדל העמק',
+        description: 'כתובת: רחוב פנינת העמק פינת שדרות הבנים, מגדל העמק <br> טלפון: 04-6447444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.05832, 32.70686]
+      },
+      properties: {
+        title: 'נקודת רכס הכרמל',
+        description: 'כתובת: כביש 672, עוספיה - בסמוך לכניסה מכיוון דאלית אל-כרמל <br> טלפון: 04-8395895 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.37715, 32.68714]
+      },
+      properties: {
+        title: 'נקודת תבור',
+        description: 'כתובת: בסמיכות לבית ספר אל כנדי מדרום, בכניסה לחניית בית הספר מדרך הר תבור, דבוריה <br> טלפון: 04-677-2747 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.29606, 32.70333]
+      },
+      properties: {
+        title: 'תחנת נצרת',
+        description: 'כתובת: רחוב 6077 מספר 6, נצרת <br> טלפון: 04-6028444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.31510, 35.31510]
+      },
+      properties: {
+        title: 'תחנת נוף הגליל',
+        description: 'כתובת: רחוב מעלה עלית פינת רחוב גלבוע, נוף הגליל <br> כתובת: 04-6029444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.12744, 32.72422]
+      },
+      properties: {
+        title: 'נקודת טבעון',
+        description: 'כתובת: החורש 2, קרית טבעון <br> טלפון: 04-983-1009 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.33141, 32.75638]
+      },
+      properties: {
+        title: 'תחנת כפר כנא',
+        description: 'כתובת: אזור תעשיה (בסמוך לאצטדיון עירוני), כפר כנא <br> טלפון: 04-6479300 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.97423, 32.76280]
+      },
+      properties: {
+        title: 'תחנת טירת הכרמל',
+        description: 'כתובת: לניאדו 1, טירת כרמל <br> טלפון: 04-8579000 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.52637, 32.79600]
+      },
+      properties: {
+        title: 'תחנת טבריה',
+        description: 'כתובת: דרך הציונות והחשמונאים, טבריה <br> טלפון: 04-6728444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.25238, 32.80655]
+      },
+      properties: {
+        title: 'כפר מנדא',
+        description: 'כתובת: כפר מנדא 51 203 כפר מנדא <br> טלפון: 04-6814813 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.16763, 32.81728]
+      },
+      properties: {
+        title: 'תחנת שפרעם',
+        description: 'כתובת: השכונה המערבית (אל פוואר), שפרעם <br> טלפון: 04-9059444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.07157, 32.81543]
+      },
+      properties: {
+        title: 'תחנת זבולון',
+        description: 'כתובת: ההסתדרות 291, חיפה <br> טלפון: 04-8464444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.00943, 32.80402]
+      },
+      properties: {
+        title: 'תחנת חיפה',
+        description: 'כתובת: רחוב נתן אלבז פינת רחוב ירוחם צייזל, חיפה <br> טלפון: 04-8648444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.18245, 32.85068]
+      },
+      properties: {
+        title: 'תחנת טמרה',
+        description: 'כתובת: טמרה <br> טלפון: 04-614-9200 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.26159, 32.86380]
+      },
+      properties: {
+        title: 'תחנת משגב',
+        description: 'כתובת: כביש 784, מול צומת הכניסה לרקפת <br> טלפון: 04-9904444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.30053, 32.92282]
+      },
+      properties: {
+        title: 'תחנת כרמיאל',
+        description: 'כתובת: החרושת 7, כרמיאל <br> טלפון: 04-9901444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.24395, 32.91987]
+      },
+      properties: {
+        title: 'תחנת מגד אל כרום',
+        description: 'כתובת: רחוב סלאח א-דין, מגד אל כרום <br> טלפון: 04-8832444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.16333, 32.94790]
+      },
+      properties: {
+        title: 'תחנת גליל מערבי',
+        description: 'כתובת: כפר יאסיף, בכניסה ליישוב מכביש 70, מול תחנת הדלק <br> טלפון: 03-769-7444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.06858, 32.91861]
+      },
+      properties: {
+        title: 'נקודת המרינה, עכו',
+        description: 'כתובת: רחוב ליאופולד השני, נמל עכו <br> טלפון: 04-9919475 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.06715, 32.93232]
+      },
+      properties: {
+        title: 'תחנת עכו',
+        description: 'כתובת: ההגנה 16, עכו <br> טלפון: 04-9876808 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.09959, 33.00929]
+      },
+      properties: {
+        title: 'תחנת נהריה',
+        description: 'כתובת: שדרות הנשיא בן צבי פינת דרך העצמאות, נהרייה <br> טלפון: 04-9518444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.25815, 33.01708]
+      },
+      properties: {
+        title: 'תחנת מעלות תרשיחא',
+        description: 'כתובת: כביש 8833, מעונה <br> טלפון: 04-9578444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.50364, 32.96901]
+      },
+      properties: {
+        title: 'תחנת צפת',
+        description: 'כתובת: סמוך לצומת הרחובות דרך הגליל, צפת <br> טלפון: 04-6978444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.55107, 32.97367]
+      },
+      properties: {
+        title: 'תחנת ירדן',
+        description: 'כתובת: רחוב דרך הגליל פינת רחוב מעלה גיא אוני (כיכר ליזה), ראש פינה <br> טלפון: 04-6809444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.69622, 32.99167]
+      },
+      properties: {
+        title: 'תחנת גולן',
+        description: 'כתובת: רחוב שיאון פינת רחוב גילבון, קצרין <br> טלפון: 04-6968222 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.56619, 33.21373]
+      },
+      properties: {
+        title: 'תחנת קריית שמונה',
+        description: 'כתובת: המכבים 8, קריית שמונה <br> טלפון: 04-6958444 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.75786, 33.22913]
+      },
+      properties: {
+        title: 'נקודת מסעדה',
+        description: 'כתובת: דרומית לצומת יער אודם על כביש 98, מסעדה <br> טלפון: 04-6981888 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.50235, 31.77666]
+      },
+      properties: {
+        title: 'נקודת מגילות',
+        description: 'כתובת: מתחם צומת קליה (הלידו), נקודת מגילות(סמוך למבנה המועצה) <br> טלפון: 050-5064990 <br> שעות פתיחה: 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.52641, 31.87085]
+      },
+      properties: {
+        title: 'נקודת גשר אלנבי',
+        description: 'כתובת: גשר אלנבי <br> טלפון: 03-680-1554 <br> שעות פתיחה: 24/7'
+      }
+    }
+  ]
+};
+// add markers to map
+geojson.features.forEach(function(marker) {
+  // create a HTML element for each feature
+  var el = document.createElement('div');
+  el.className = 'marker';
+
+  // make a marker for each feature and add to the map
+  new mapboxgl.Marker(el)
+   .setLngLat(marker.geometry.coordinates)
+   .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+   .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+   .addTo(map);
+});
+</script>
+
+</body>
+</html>

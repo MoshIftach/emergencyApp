@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>Add custom markers in Mapbox GL JS</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+	<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css" type="text/css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+	  .marker {
+        background-image: url('https://cdn.iconscout.com/icon/premium/png-256-thumb/fire-station-3610798-3015290.png');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+</head>
+
+
+<body>
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v11',
+  center: [35.19841, 32.00938],
+  zoom: 9
+});
+
+const nav = new mapboxgl.NavigationControl();
+map.addControl(nav);
+
+var directions = new MapboxDirections({
+  accessToken: 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA',
+});
+
+map.addControl(directions, 'top-left');
+
+const geojson = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.927084778698514,29.541355448684573]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש שחמון',
+        description: 'ישוב : אילת<br>כתובת : אילת<br>טלפון : 08-630-3154<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.95075809001992,29.567536328784215]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אילת',
+        description: 'ישוב : אילת<br>כתובת : שדרות התמרים 61<br>טלפון : 08-630-3102<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.95934688282514,29.569105710384843 ]
+      },
+      properties: {
+        title: 'תחנת קרן אש',
+        description: 'ישוב : אילת<br>כתובת : הסתת 18<br>טלפון : 086767505<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.05902821192616,29.90428525147905 ]
+      },
+      properties: {
+        title: 'תחנת קרן אש',
+        description: 'ישוב : יוטבתה<br>כתובת : יוטבתה<br>טלפון : 086372045<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.795051517706526,30.652409315681563 ]
+      },
+      properties: {
+        title: 'תחנת מצפה רמון',
+        description: 'ישוב : מצפה רמון<br>כתובת : נחל חווה 1, מצפה רמון<br>טלפון : 086586695<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.02576440462619,31.119112123989726 ]
+      },
+      properties: {
+        title: 'תחנת דימונה',
+        description: 'ישוב : דימונה<br>כתובת : המלאכה, דימונה<br>טלפון : 086552222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.207038816042,31.295298193835137 ]
+      },
+      properties: {
+        title: 'תחנת ערד',
+        description: 'ישוב : ערד<br>כתובת : התעשייה 33, ערד<br>טלפון : 089950222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [  34.81977075585543,31.297645122924354 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית באר שבע',
+        description: 'ישוב : באר שבע<br>כתובת : סעדיה מלל, באר שבע<br>טלפון : 089110000<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.751106206176964,31.304685559520724 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש באר שבע',
+        description: 'ישוב : באר שבע<br>כתובת : דרך אילן רמון 20, באר שבע<br>טלפון : 089110013<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [  34.61227914821064,31.35459355116242 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אופקים',
+        description: 'ישוב : אופקים<br>כתובת : הנשיא 13, אופקים<br>טלפון : 089923022<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [   34.42659370796318,31.303903345359767 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אשכול',
+        description: 'ישוב : אשכול<br>כתובת : מגן<br>טלפון : 089923265<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.589307753540844,31.423227033026564 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש נתיבות',
+        description: 'ישוב : נתיבות<br>כתובת : אחת עשרה הנקודות, נתיבות<br>טלפון : 089943333<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.59139011481242,31.52554294366567 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש שדרות',
+        description: 'ישוב : שדרות<br>כתובת : הרצל 59, שדרות<br>טלפון : 089116743<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.77417498071782,31.611936082054765 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש קרית גת',
+        description: 'ישוב : קרית גת<br>כתובת : שדרות לכיש 4, קרית גת<br>טלפון : 089116750<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.58738752650792,31.66418775874967 ]
+      },
+      properties: {
+        title: 'אגוד ערים שרותי כבאות אשקלון',
+        description: 'ישוב : אשקלון<br>כתובת : התחייה 3, אשקלון<br>טלפון : 089116766<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.9462862784969,31.686896719818943 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש האלה',
+        description: 'ישוב : האלה<br>כתובת : <br>טלפון:<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.746156863272006,31.740240907974414 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש קרית מלאכי',
+        description: 'ישוב :קרית מלאכי<br>כתובת : הרב חיים פינטו 3, קרית מלאכי<br>טלפון:089116632<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.70346258802403,31.786750125786437 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש גן יבנה',
+        description: 'ישוב :גן יבנה<br>כתובת : הרצל 37, גן יבנה<br>טלפון:089116654<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.66076831277606,31.811696652391376 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש והצלה אשדוד',
+        description: 'ישוב :אשדוד<br>כתובת : זבוטינסקי ,אשדוד<br>טלפון:089116655<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.976972790052734,31.753855783028325 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית בית שמש',
+        description: 'ישוב :בית שמש<br>כתובת : השבעה 36, בית שמש<br>טלפון:<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.19844934290161,31.76293125307312 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית ירושלים',
+        description: 'ישוב :ירושלים<br>כתובת : שחל 1 ירושלים<br>טלפון:025690500<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.20325535979409,31.78406837973277 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש לאום',
+        description: 'ישוב :ירושלים<br>כתובת :שדרות יצחק רבין 10, ירושלים<br>טלפון:025690500<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.207832259325805,31.79270909890971 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש רוממה',
+        description: 'ישוב :ירושלים<br>כתובת :שמגר 3, ירושלים<br>טלפון:025690530<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.1441008097568,31.793029625964685 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש מבשרת ציון',
+        description: 'ישוב :מבשרת ציון<br>כתובת :היצירה 1, מבשרת ציון<br>טלפון:025342111<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.7970124278099,31.89957999230127 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש רחובות',
+        description: 'ישוב :רחובות<br>כתובת :רחוב הים רחובות<br>טלפון:089461222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.886282204677755,31.939833486373068 ]
+      },
+      properties: {
+        title: 'כבאות והצלה לישראל - תחנה אזורית איילון',
+        description: 'ישוב :לוד<br>כתובת :דרך הרמא , לוד<br>טלפון:086839911<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.790492569597305,31.980905377225298 ]
+      },
+      properties: {
+        title: 'מכבי אש ראשון לציון',
+        description: 'ישוב :ראשון לציון<br>כתובת :ראשון לציון<br>טלפון:<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.74998048528701,32.01293341468847 ]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש בת ים',
+        description: 'ישוב :בת ים<br>כתובת :אהוד קינמון 10, בת ים<br>טלפון:035512222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.799418961055515,32.01002223718539]
+      },
+      properties: {
+        title: 'מכבי אש חולון',
+        description: 'ישוב :חולון<br>כתובת :הרוקמים 14, חולון<br>טלפון:<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.762340104846686,32.051934270618744]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש יפו',
+        description: 'ישוב :תל אביב יפו<br>כתובת :דרך בן צבי 27, תל אביב-יפו<br>טלפון:036900444<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.791865861208436,32.06240928122831]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אלון',
+        description: 'ישוב :תל אביב יפו<br>כתובת :יגאל אלון 62, תל אביב-יפו<br>טלפון:036900444<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.78118856270482, 32.10341066239691]
+      },
+      properties: {
+        title: 'כבאות והצלה תל אביב',
+        description: 'ישוב :תל אביב יפו<br>כתובת :שלמה אבן גבירול 231, תל אביב-יפו<br>טלפון:036900444<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.79666614476583, 32.08787048498407]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש ספיר',
+        description: 'ישוב :מועצה אזורית אפעל<br>כתובת :פנחס ספיר, מועצה אזורית אפעל<br>טלפון:086436628<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.80124168413906,32.088975781203395]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש בורסה - רמת גן',
+        description: 'ישוב :רמת גן<br>כתובת :דרך מנחם בגין 37, רמת גן<br>טלפון:036742222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.812727381473955,32.0711339462488]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש גבעתיים',
+        description: 'ישוב :גבעתיים<br>כתובת :המעיין 38, גבעתיים<br>טלפון:036742222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.83282735181001,32.0682951514365]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית רמת גן',
+        description: 'ישוב :רמת גן<br>כתובת :אריה בן אליעזר 13, רמת גן<br>טלפון:036742222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.83904877119975,32.09100304207821]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש בני ברק',
+        description: 'ישוב :בני ברק<br>כתובת :הרב שפירא 1-5, בני ברק<br>טלפון:036182222<br>שעות פתיחה : 24/7'
+      }
+    }
+	,
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.88642727270618,32.099111635771955]
+      },
+      properties: {
+        title: 'כיבוי אש פתח תקווה',
+        description: 'ישוב :פתח תקווה<br>כתובת :המכבים 1<br>טלפון:039053399<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [  34.85244875209247,32.136401896454]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש רמת השרון',
+        description: 'ישוב :רמת השרון<br>כתובת :בית הלל 6, רמת השרון<br>טלפון:039532298<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.82469165019981,32.16516983013596]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש הרצליה',
+        description: 'ישוב :הרצליה<br>כתובת :6,, שדרות שבעת הכוכבים 4, הרצליה<br>טלפון:099507826<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.895998687820615,32.18137311787226]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש כפר סבא',
+        description: 'ישוב :כפר סבא<br>כתובת :טשרניחובסקי 53, כפר סבא<br>טלפון:097450044<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.867678534860794,32.32233797882856]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש נתניה',
+        description: 'ישוב :נתניה<br>כתובת :דרך הרכבת 4, נתניה<br>טלפון:097940999<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.88211924187355,32.44713036824156]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש גבעת אולגה',
+        description: 'ישוב :חדרה<br>כתובת :חדרה<br>טלפון:<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.928811135654904,32.44365359443774]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית חדרה',
+        description: 'ישוב :חדרה<br>כתובת :צה"ל 30, חדרה<br>טלפון:046232106<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.95490366453273,32.56989022548866]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש זכרון יעקב',
+        description: 'ישוב :זכרון יעקב<br>כתובת :דרך אהרון 207, זכרון יעקב<br>טלפון:046232161<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.28724009110798,32.61732783402341]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש עפולה',
+        description: 'ישוב :עפולה<br>כתובת :עפולה<br>טלפון:046120720<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.30783945601153,32.702883324733236]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש נצרת',
+        description: 'ישוב :נצרת<br>כתובת :שוהאדה א 62<br>טלפון:046555222<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.336313490530934,32.716315383901204]
+      },
+      properties: {
+        title: 'תתחנת כיבוי אש ציפורית',
+        description: 'ישוב :נוף הגליל<br>כתובת :הגליל<br>טלפון:046120702<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.685670117800626,32.79841789580711]
+      },
+      properties: {
+        title: 'תתחנת כיבוי אש בני יהודה',
+        description: 'ישוב :בני יהודה<br>כתובת :בני יהודה<br>טלפון:046120946<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.16307088906295,32.81289871433844]
+      },
+      properties: {
+        title: 'תתחנת כיבוי אש שפרעם',
+        description: 'ישוב :שפרעם<br>כתובת :שפרעם<br>טלפון:049956874<br>שעות פתיחה : 24/7'
+      }
+    }
+	,
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.050128195805456,32.76944918242306]
+      },
+      properties: {
+        title: 'תתחנת כיבוי אש נשר',
+        description: 'ישוב :נשר<br>כתובת :דרך השלום 26, נשר<br>טלפון:048601299<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.02045681102365,32.80083152908914]
+      },
+      properties: {
+        title: 'מכבי אש תחנת חלץ',
+        description: 'ישוב :חיפה<br>כתובת :חלץ 9, חיפה<br>טלפון:048601200<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.98217115324067,32.802440581738644]
+      },
+      properties: {
+        title: 'מכבי אש תחנת הכרמל',
+        description: 'ישוב :חיפה<br>כתובת :כיכר היינריך היינה 1, חיפה<br>טלפון:048601299<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 34.988871143352696,32.821746941685554]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש מערב חיפה',
+        description: 'ישוב :חיפה<br>כתובת :מרדכי אנילוביץ 9<br>טלפון:048601299<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [  35.09607098569843,32.86356299691462]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש קרית ביאליק',
+        description: 'ישוב :קרית ביאליק<br>כתובת :שדרות ח"ן 9, קריית ביאליק<br>טלפון:048601299<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.08075672258524,32.92946365172858]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית זבולון',
+        description: 'ישוב :עכו<br>כתובת :דוד זמר 1, עכו<br>טלפון:049956853<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.32195636661802,32.92785690211468]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית גליל מרכזי',
+        description: 'ישוב :כרמיאל<br>כתובת :החרושת 64, כרמיאל<br>טלפון:049956854<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.10659954160414,33.01056654532748]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש נהריה',
+        description: 'ישוב :נהריה<br>כתובת :דרך יחיעם 1, נהריה<br>טלפון:049956861<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [ 35.28462785492196,33.01377701034447]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש מעלות',
+        description: 'ישוב :מעלות תרשיחא<br>כתובת :בן גוריון 1, מעלות תרשיחא<br>טלפון:049956866<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [  35.566984581071445,33.198181834780854]
+      },
+      properties: {
+        title: 'תחנת כיבוי אש אזורית גליל גולן',
+        description: 'ישוב :קרית שמונה<br>כתובת :ברזילי 1, קרית שמונה<br>טלפון:046120903<br>שעות פתיחה : 24/7'
+      }
+    }
+  ]
+};
+// add markers to map
+geojson.features.forEach(function(marker) {
+  // create a HTML element for each feature
+  var el = document.createElement('div');
+  el.className = 'marker';
+
+  // make a marker for each feature and add to the map
+  new mapboxgl.Marker(el)
+   .setLngLat(marker.geometry.coordinates)
+   .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+   .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+   .addTo(map);
+});
+</script>
+
+</body>
+</html>

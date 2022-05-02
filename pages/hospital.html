@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>Add custom markers in Mapbox GL JS</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+	<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css" type="text/css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+	  .marker {
+        background-image: url('https://toppng.com/uploads/preview/health-plan-icon-hospital-icon-blue-11553476430fckf2owtwt.png');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v11',
+  center: [35.19841, 32.00938],
+  zoom: 9
+});
+
+const nav = new mapboxgl.NavigationControl();
+map.addControl(nav);
+
+var directions = new MapboxDirections({
+  accessToken: 'pk.eyJ1Ijoiam93ZWx5MjAxOSIsImEiOiJjbDEzaTh6d2MwNWhzM2NxYWd4cHZ2bXJxIn0.rYZ-TThTka-P9rU5MNM2gA',
+});
+
+map.addControl(directions, 'top-left');
+
+const geojson = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.93919, 29.55699]
+      },
+      properties: {
+        title: 'בית חולים יוספטל',
+        description: 'ישוב : אילת<br>כתובת : ת.ד 600<br>מיקוד : 88000<br>טלפון : 07-6358011<br>פקס : 07-6372549<br>שעות פתיחה : 24/7'
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.80048, 31.26188]
+      },
+      properties: {
+        title: 'בית חולים סורוקה',
+        description: 'ישוב : באר שבע<br>כתובת : ת.ד 151<br>מיקוד : 84101<br>טלפון : 07-6400111<br>פקס : -<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.15670, 31.76872]
+      },
+      properties: {
+        title: 'בית חולים הדסה עין כרם',
+        description: 'ישוב : ירושלים<br>כתובת :  קרית הדסה <br>מיקוד : 91120<br>טלפון : 02-6777111<br>פקס : -<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.55836, 31.65972]
+      },
+      properties: {
+        title: 'בית חולים ברזילי',
+        description: 'ישוב : אשקלון<br>כתובת : ההסתדרות 2<br>מיקוד : 78306<br>טלפון : 07-674555<br>פקס : -<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.18324, 31.77350]
+      },
+      properties: {
+        title: 'בית חולים שערי צדק',
+        description: 'ישוב : ירושלים<br>כתובת :  ת.ד 5323<br>מיקוד : 91031<br>טלפון : 02-6555111<br>פקס : -<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.24051, 31.80213]
+      },
+      properties: {
+        title: 'בית חולים הדסה הר הצופים',
+        description: 'ישוב : ירושלים<br>כתובת :  ת.ד 24035<br>מיקוד : 91240<br>טלפון : 02-5844111<br>פקס : -<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.80991, 31.87788]
+      },
+      properties: {
+        title: 'בית חולים קפלן',
+        description: 'ישוב : רחובות<br>כתובת :  ת.ד 1<br>מיקוד : 76100<br>טלפון : 08-9441211<br>פקס : 08-9442281<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.83760,31.94597]
+      },
+      properties: {
+        title: 'בית חולים אסף הרופא',
+        description: 'ישוב : באר יעקב<br>כתובת :  צריפין<br>מיקוד : 703300<br>טלפון : 08-9779999<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.76861,32.03523]
+      },
+      properties: {
+        title: 'בית חולים וולפסון',
+        description: 'ישוב : חולון<br>כתובת :  הלוחמים 62<br>מיקוד : 58100<br>טלפון : 03-5028211<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.84420,32.04739]
+      },
+      properties: {
+        title: 'בית חולים שיבא',
+        description: 'ישוב : רמת גן<br>כתובת :  תל השומר<br>מיקוד : 52621<br>טלפון : 03-5303030<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.78662,32.07942]
+      },
+      properties: {
+        title: 'בית חולים סוראסקי',
+        description: 'ישוב : תל אביב יפו<br>כתובת :  ויצמן 6<br>מיקוד : 64239<br>טלפון : 03-6974444<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.87909,32.08208]
+      },
+      properties: {
+        title: 'מרכז רפואי על שם רבין השרון',
+        description: 'ישוב : פתח תקווה<br>כתובת : אתר גולדה קקל 7<br>מיקוד : 49372<br>טלפון : 03-9372372<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.85521,32.09633]
+      },
+      properties: {
+        title: 'מרכז רפואי על שם רבין קומפס בלינסון',
+        description: 'ישוב : פתח תקווה<br>כתובת : אתר בלינסון<br>מיקוד : 49100<br>טלפון : 03-9377377<br>פקס : 03-9222173<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.89415,32.18472]
+      },
+      properties: {
+        title: 'מרכז רפואי על שם ספיר , מאיר',
+        description: 'ישוב : כפר סבא<br>כתובת : זבוטינסקי 54<br>מיקוד : 44100<br>טלפון : 09-747255<br>פקס : 09-7410596<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.85428,32.33970]
+      },
+      properties: {
+        title: 'בית חולים לניאדו',
+        description: 'ישוב : נתניה<br>כתובת :  דברי חיים קרית צאנז<br>מיקוד : 42150<br>טלפון : 09-8604666<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.91763,32.43672]
+      },
+      properties: {
+        title: 'מרכז רפואי על שם הלל יפה',
+        description: 'ישוב : חדרה<br>כתובת : ת.ד 961<br>מיקוד : 38100<br>טלפון : 06-6304304<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.28973,32.60773]
+      },
+      properties: {
+        title: 'בית חולים המרכזי בעמק',
+        description: 'ישוב : עפולה<br>כתובת :  ירושלים 4<br>מיקוד : 18100<br>טלפון : 06-6524141<br>פקס : 08-6595403<br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.29610,32.69851]
+      },
+      properties: {
+        title: 'בית חולים המשפחה הקדושה',
+        description: 'ישוב : נצרת<br>כתובת : נמסאוי<br>מיקוד : 16100<br>טלפון : 06-6569122<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.29765,32.70220]
+      },
+      properties: {
+        title: 'בית חולים הסקוטי',
+        description: 'ישוב : נצרת<br>כתובת : ת.ד 11<br>מיקוד : 16100<br>טלפון : 06-6571501<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.29371,32.70305]
+      },
+      properties: {
+        title: 'בית חולים הצרפתי סנט וינסנט דה פאול',
+        description: 'ישוב : נצרת<br>כתובת : מאולוס השישי<br>מיקוד : 16102<br>טלפון : 06-6574530<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.98503,32.78854]
+      },
+      properties: {
+        title: 'בית חולים הכרמל',
+        description: 'ישוב : חיפה<br>כתובת : חורב 8<br>מיקוד : 0<br>טלפון : 04-8250211<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.98779,32.81240]
+      },
+      properties: {
+        title: 'בית חולים בני ציון',
+        description: 'ישוב : חיפה<br>כתובת : גולומב 16<br>מיקוד : 0<br>טלפון : 04-8359359<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [34.98576,32.83378]
+      },
+      properties: {
+        title: 'מרכז רפואי על רמבם',
+        description: 'ישוב : חיפה<br>כתובת : העחיה 8<br>מיקוד : 381096<br>טלפון : 04-8543111<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.54701,32.73103]
+      },
+      properties: {
+        title: 'בית חולים פוריה',
+        description: 'ישוב : טבריה<br>כתובת : רמת פוריה גליל תחתון<br>מיקוד : 15208<br>טלפון : 06-6798221<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.49199,32.95482]
+      },
+      properties: {
+        title: 'בית חולים על שם רבקה זיו',
+        description: 'ישוב : צפת<br>כתובת : ת.ד 1008<br>מיקוד : 13100<br>טלפון : 06-6978811<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    },
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [35.11558,33.01178]
+      },
+      properties: {
+        title: 'בית חולים לגליל המערבי',
+        description: 'ישוב : נהריה<br>כתובת : ת.ד 12<br>מיקוד : 22100<br>טלפון : 04-9850505<br>פקס : <br>שעות פתיחה : 24/7'
+
+      }
+    }
+  ]
+};
+// add markers to map
+geojson.features.forEach(function(marker) {
+  // create a HTML element for each feature
+  var el = document.createElement('div');
+  el.className = 'marker';
+
+  // make a marker for each feature and add to the map
+  new mapboxgl.Marker(el)
+   .setLngLat(marker.geometry.coordinates)
+   .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+   .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+   .addTo(map);
+});
+</script>
+
+</body>
+</html>

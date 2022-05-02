@@ -1,0 +1,136 @@
+#topheader .navbar-nav li > a {
+  transition: background-color 0.2s, color 0.2s;
+  color: #111;
+}
+#topheader .navbar-nav li > a:hover, #topheader .navbar-nav li > a:focus {
+	text-decoration: bold;
+	background-color: #111;
+	color: #fff;
+}
+
+#topheader .navbar-nav li.active > a {
+	text-decoration: bold;
+	background-color: #111;
+	color: #fff;
+}
+
+#login-dp{
+    min-width: 250px;
+    padding: 14px 14px 0;
+    background-color:rgba(255,255,255,.9);
+}
+
+#login-dp .bottom{
+    background-color:rgba(255,255,255,.9);
+    border-top:1px solid #ddd;
+    clear:both;
+    padding:14px;
+}
+
+#signinBtn {
+	color: white;
+	background-color: #111;
+}
+
+.darkmode-toggle {
+  z-index: 500;
+}
+
+.darkmode--activated footer {
+  color: white;
+}
+
+.darkmode--activated .navbar {
+  background-color: #111;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.darkmode--activated #topheader .navbar-nav li > a {
+  transition: background-color 0.2s, color 0.2s;
+  color: #fff;
+}
+
+.darkmode--activated  #topheader .navbar-nav li > a:hover, #topheader .navbar-nav li > a:focus {
+	text-decoration: bold;
+	background-color: #fff;
+	color: #111;
+}
+
+.darkmode--activated #topheader .navbar-nav li.active > a {
+	text-decoration: bold;
+	background-color: #fff;
+	color: #111;
+}
+
+.darkmode--activated #login-dp{
+    min-width: 250px;
+    padding: 14px 14px 0;
+    background-color:rgba(0,0,0,.9);
+}
+
+.darkmode--activated #login-dp .bottom{
+    background-color:rgba(0,0,0,.9);
+    border-top:1px solid #ddd;
+    clear:both;
+    padding:14px;
+}
+
+.darkmode--activated #signinBtn {
+	color: #111;
+	background-color: #fff;
+}
+
+@media(max-width:768px){
+    #login-dp{
+        background-color: inherit;
+        color: #fff;
+    }
+    #login-dp .bottom{
+        background-color: inherit;
+        border-top:0 none;
+    }
+}
+
+/* login dropdown animation */
+.animate {
+	animation-duration: 0.3s;
+	-webkit-animation-duration: 0.3s;
+	animation-fill-mode: both;
+	-webkit-animation-fill-mode: both;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  100% {
+    transform:translateY(0rem);
+    opacity: 1;
+  }
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    -webkit-transform: transform;
+    -webkit-opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    -webkit-opacity: 1;
+  }
+  0% {
+    -webkit-transform: translateY(1rem);
+    -webkit-opacity: 0;
+  }
+}
+
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}

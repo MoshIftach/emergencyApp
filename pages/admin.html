@@ -1,0 +1,61 @@
+
+
+<html>
+	<head>
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		<!-- Font Awesome CSS -->
+		<link href="./style/all.css" rel="stylesheet">
+		<!-- The core Firebase JS SDK is always required and must be listed first -->
+		<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+
+		<!-- TODO: Add SDKs for Firebase products that you want to use
+				https://firebase.google.com/docs/web/setup#available-libraries -->
+		<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-analytics.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
+		
+		<script>
+			// Your web app's Firebase configuration
+			// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+			var firebaseConfig = {
+				apiKey: "AIzaSyBL7eH7kmG1j2Ri6xW7X-W75Nhe0-G8u88",
+				authDomain: "emergency123-53e35.firebaseapp.com",
+				projectId: "emergency123-53e35",
+				storageBucket: "emergency123-53e35.appspot.com",
+				messagingSenderId: "595863331461",
+				appId: "1:595863331461:web:94a0c86fadda9b1333ffec",
+				measurementId: "G-3PTD709H2Q"
+			};
+			// Initialize Firebase
+			firebase.initializeApp(firebaseConfig);
+			firebase.analytics();
+		</script>
+		<script src="./js/firebaseAuth.js"></script>
+		<script>
+				firebase.auth().onAuthStateChanged(function(user) {
+					if (!user) { 
+						document.getElementById('body').style.display = "none";
+						
+						if (window.location.pathname.split("/").pop() == 'admin.html') {
+							window.location.href = 'index.html';
+						}
+					}
+					else {
+						document.getElementById('body').style.display = "block";
+
+						if (window.parent.document.getElementById('adminPage').getAttribute('src') != './pages/admin.html') {
+							window.parent.document.getElementById('adminPage').setAttribute('src', './pages/admin.html');
+						}
+					}
+				});
+		</script>
+	</head>
+	<body id="body" style="background: none;font-size: 30px; display: none;">
+		
+        <h1>User Management</h1>
+        <br />
+        <a href="https://console.firebase.google.com/u/0/project/emergency123-53e35/authentication/users" target="_blank">Firebase link</a>
+		
+	</body>
+</html>
